@@ -24,7 +24,7 @@ $(document).ready(function () {
 
         $.get('/getCheckRefNo', { refno: refno }, 'refno', function (result) {
 
-            if (result.refno == refno) {
+            if (refno == result.refno) {
                 $('#refno').css('background-color', 'red');
                 $('#error').text('Reference number already in the database');
                 $('#submit').prop('disabled', true);
@@ -88,7 +88,7 @@ $(document).ready(function () {
 
         $.get('delete', { refno: refno }, function (flag) {
             if (flag) {
-                $t.parent.remove();
+                $t.parent().remove();
             }
         });
 

@@ -15,10 +15,10 @@ const controller = {
     getIndex: async function (req, res) {
         // your code here
         // get all the transactions from the database and render it 
-        var transaction = await db.findMany(Transaction, {}, 'name refno amount');
-        console.log(transaction);
+        var result = await db.findMany(Transaction, {}, 'name refno amount');
+        console.log(result);
 
-        res.render('index', { transaction: transaction }); // This is to load the page initially
+        res.render('index', { transaction: result }); // This is to load the page initially
     },
 
     /*
@@ -69,14 +69,13 @@ const controller = {
             from the database, then removes the transaction from the list of
             transactions in `index.hbs`.
     */
-    getDelete: function (req, res) {
+    getDelete: async function (req, res) {
         // your code here
         var refno = req.query.refno;
 
-        db.deleteOne(Transaction, { refno: refno }, function (flag) {
-            res.send(flag);
-        });
+        var flag = await db.deleteOne(Transaction, { refno: refno });
 
+        res.send(flag);
     }
 
 }
