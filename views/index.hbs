@@ -27,6 +27,9 @@
             -->
             <div id="cards">
             <!-- your code here -->
+            {{#each transaction}}
+                {{> card name=name refno=refno amount=amount}}
+            {{/each}}
             </div>
         </div>
     </div>

@@ -12,9 +12,20 @@ const controller = {
             request to path `/`. This displays `index.hbs` with all
             transactions currently stored in the database.
     */
-    getIndex: function(req, res) {
+    getIndex: function (req, res) {
         // your code here
-        res.render('index'); // This is to load the page initially
+        // get all the transactions from the database and render it 
+        db.findMany(Transaction, {}, 'name refno amount', function (result) {
+            var transaction = { 'transaction': result };
+            console.log(transaction);
+
+            if (result != null) {
+                res.render('index', transaction); // This is to load the page initially
+            } else {
+                res.render('index');
+            }
+        })
+
     },
 
     /*
@@ -24,8 +35,14 @@ const controller = {
             is stored in the database, it returns an object containing the
             reference number, otherwise, it returns an empty string.
     */
-    getCheckRefNo: function(req, res) {
+    getCheckRefNo: function (req, res) {
         // your code here
+        var refno = req.query.refno;
+
+        db.findOne(Transaction, { refno: refno }, 'refno', function (result) {
+            res.send(result);
+        })
+
     },
 
     /*
@@ -34,8 +51,24 @@ const controller = {
             sent by the client to the database, then appends the new
             transaction to the list of transactions in `index.hbs`.
     */
-    getAdd: function(req, res) {
+    getAdd: function (req, res) {
         // your code here
+        var name = req.query.name;
+        var refno = req.query.refno;
+        var amount = req.query.amount;
+
+        /* var doc = {
+            name: name,     
+            refno: refno,   
+            amount: amount  
+        }; */
+
+        db.insertOne(Transaction, { name: name, refno: refno, amount: amount }, function (flag) {
+            // insertOne function from mongoose returns a boolean value I think
+            res.render('partials/card', { name: name, refno: refno, amount: amount }, function (err, html) {
+                res.send(html);
+            })
+        })
     },
 
     /*
@@ -46,6 +79,12 @@ const controller = {
     */
     getDelete: function (req, res) {
         // your code here
+        var refno = req.query.refno;
+
+        db.deleteOne(Transaction, { refno: refno }, function (flag) {
+            res.send(flag);
+        });
+
     }
 
 }

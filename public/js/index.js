@@ -19,6 +19,21 @@ $(document).ready(function () {
     */
     $('#refno').keyup(function () {
         // your code here
+
+        var refno = $('#refno').val();
+
+        $.get('/getCheckRefNo', { refno: refno }, 'refno', function (result) {
+
+            if (result.refno == refno) {
+                $('#refno').css('background-color', 'red');
+                $('#error').text('Reference number already in the database');
+                $('#submit').prop('disabled', true);
+            } else {
+                $('#refno').css('background-color', '#E3E3E3');
+                $('#error').text('');
+                $('#submit').prop('disabled', false);
+            }
+        });
     });
 
     /*
@@ -39,6 +54,23 @@ $(document).ready(function () {
     */
     $('#submit').click(function () {
         // your code here
+        var name = $('#name').val();
+        var refno = $('#refno').val();
+        var amount = $('#amount').val();
+
+        if (name != '' && refno != '') {
+
+            $.get('/add', { name: name, refno: refno, amount: amount }, function (result) {
+                // append the rendered html and reset inputs
+                $('#cards').append(result);
+                $('#name').val('');
+                $('#refno').val('');
+                $('#amount').val('');
+            })
+
+        } else {
+            $('#error').text('Fill up all fields.');
+        }
     });
 
     /*
@@ -50,6 +82,17 @@ $(document).ready(function () {
     */
     $('#cards').on('click', '.remove', function () {
         // your code here
+        var $t = $(this);
+        // get the refno, this will be used to delete the Transaction from the db
+        var refno = $(this).parent().find('p:nth-child(2)').text();
+
+        $.get('delete', { refno: refno }, function (flag) {
+            if (flag) {
+                $t.parent.remove();
+            }
+        });
+
     });
+
 
 })
