@@ -22,7 +22,7 @@ $(document).ready(function () {
 
         var refno = $('#refno').val();
 
-        $.get('/getCheckRefNo', { refno: refno }, 'refno', function (result) {
+        $.get('/getCheckRefNo', { refno: refno }, function (result) {
 
             if (refno == result.refno) {
                 $('#refno').css('background-color', 'red');
