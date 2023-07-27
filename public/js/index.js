@@ -86,7 +86,7 @@ $(document).ready(function () {
         // get the refno, this will be used to delete the Transaction from the db
         var refno = $(this).parent().find('p:nth-child(2)').text();
 
-        $.get('delete', { refno: refno }, function (flag) {
+        $.get('/delete', { refno: refno }, function (flag) {
             if (flag) {
                 $t.parent().remove();
             }
